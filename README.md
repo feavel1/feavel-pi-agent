@@ -74,9 +74,17 @@ pi install https://github.com/feavel1/feavel-pi-agent.git
 | `npm:pi-web-access` | `librarian` skill — research open-source libraries with source citations |
 | `npm:pi-subagents` | `pi-subagents` skill + built-in agents (scout, planner, worker, reviewer, oracle, researcher, context-builder, delegate) |
 | `npm:opencode-ponytail` | `ponytail` family — caveman-style code simplification; `ponytail-review`, `ponytail-audit`, `ponytail-debt`, `ponytail-help` |
-| `npm:@spences10/pi-svelte-guardrails` | Blocks discouraged Svelte 5 patterns agent might generate |
 | `npm:pi-mcp-adapter` | MCP protocol adapter — bridges `@sveltejs/mcp` for official Svelte docs |
 | `npm:@quintinshaw/pi-dynamic-workflows` | `workflow` tool + 5 built-in patterns (deep-research, adversarial-review, code-review, multi-perspective, codebase-audit) + `workflow-patterns`/`workflow-authoring` skills |
+
+### Removed packages (kept for reference)
+
+| Package | Why removed |
+|---------|-------------|
+| `@vigolium/piolium` | 20 cybersecurity audit skills — niche, not needed for Svelte dev |
+| `@spences10/pi-skills` | Skill manager CLI — unused |
+| `@spences10/pi-svelte-guardrails` | Blocks `$effect` entirely — too aggressive, counterproductive |
+| `git:github.com/jonjonrankin/pi-caveman` | Duplicate of user-installed `caveman` skill |
 
 ### MCP Servers
 
@@ -88,19 +96,33 @@ pi install https://github.com/feavel1/feavel-pi-agent.git
 |-------|---------|
 | `caveman` | Ultra-compressed communication mode (~75% fewer tokens) |
 | `tdd` | Test-driven development: red-green-refactor loop |
-| `svelte-code-writer` | Svelte code writing/validation workflow |
-| `svelte-components` | Component libraries (Bits UI, Ark UI, Melt UI), forms |
-| `svelte-core-bestpractices` | Svelte 5 core patterns — routes to deeper skills |
-| `svelte-deployment` | Adapters, Vite config, pnpm, PWA, production builds |
-| `svelte-layerchart` | LayerChart tooltips, context, gradients, axes |
-| `svelte-runes` | $state, $derived, $props, $bindable, $effect |
-| `svelte-styling` | Scoped styles, CSS custom properties, `:global` |
-| `svelte-template-directives` | Snippets, @render, {@html}, svelte:boundary |
-| `sveltekit-data-flow` | Load functions, form actions, server/client, invalidation |
-| `sveltekit-remote-functions` | query(), query.live(), form(), command() in .remote.ts |
-| `sveltekit-structure` | Routing, layouts, error handling, SSR, hydration |
+| `svelte-core-bestpractices` | Svelte 5 core rules + routes to MCP for detailed docs |
 | `browser-tools` | Chrome DevTools Protocol — interactive browser automation |
-| `vscode` | View diffs and compare files in VS Code |
+
+**Svelte docs strategy:** Only `svelte-core-bestpractices` is kept as a skill. All detailed Svelte 5/SvelteKit documentation (runes, styling, routing, data flow, remote functions, deployment, etc.) comes from the official Svelte MCP server via `svelte_get-documentation`. Skills were redundant with MCP and removed.
+
+### Removed skills (kept for reference)
+
+| Skill | Why removed |
+|-------|-------------|
+| `svelte-runes` | MCP provides `$state`, `$derived`, `$effect` docs |
+| `svelte-template-directives` | MCP provides `{@attach}`, `{@render}`, snippets docs |
+| `svelte-styling` | MCP provides scoped CSS, `:global`, custom properties docs |
+| `svelte-components` | MCP + library-specific docs cover this |
+| `svelte-deployment` | MCP provides adapters, Vite config, PWA docs |
+| `sveltekit-data-flow` | MCP provides load functions, form actions docs |
+| `sveltekit-structure` | MCP provides routing, layouts, error handling docs |
+| `sveltekit-remote-functions` | MCP + experimental nature makes skill-prone staleness |
+| `svelte-layerchart` | 3rd-party lib, not Svelte core |
+| `svelte-code-writer` | Workflow boils down to "call MCP autofixer" |
+| `vscode` | Trivial — just `code -d` command |
+| `diagnose` | Niche debugging loop, rarely triggered |
+| `grill-me` / `grill-with-docs` | Interview-style planning, rarely used |
+| `impeccable` | Massive UI polish skill (~80 files), not needed |
+| `improve-codebase-architecture` | Niche architecture review |
+| `proto-logic` / `proto-ui` | Throwaway prototype builders, rarely used |
+| `to-issues` | Plan-to-issues converter, rarely used |
+| `write-a-skill` | Skill authoring, rarely used |
 
 ### Extension
 
@@ -165,7 +187,13 @@ pi install https://github.com/feavel1/feavel-pi-agent.git
 
 ## Design Principles
 
-- **Minimal packages** — only what's actively used. Security audit packages removed (reinstall if needed).
-- **Skills over prompts** — empty prompts dir; all guidance in skills.
-- **MCP over skills for docs** — Svelte MCP server provides official docs; skills provide workflow/patterns.
+- **Minimal packages** — 5 active packages. Security audit, guardrails, skill manager removed.
+- **Skills over prompts** — empty prompts dir; all guidance in skills (4 user skills + ~13 package skills).
+- **MCP over skills for docs** — Svelte MCP server provides official docs; only `svelte-core-bestpractices` kept as router.
 - **Sync everything except machine-specific config** — pi-sync's config.json is local-only.
+- **No nested .git or node_modules in sync** — extension skips these to avoid permission errors.
+
+### Known sync caveats
+
+- **Deletions are not auto-synced.** The push command copies files in but doesn't remove stale files from the repo. After deleting skills locally, run `cd ~/.pi-sync && git add -A && git commit -m "cleanup" && git push`.
+- **Reload after pull.** Run `/reload` to pick up new extensions and skills.
