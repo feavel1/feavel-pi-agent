@@ -192,8 +192,5 @@ pi install https://github.com/feavel1/feavel-pi-agent.git
 - **MCP over skills for docs** — Svelte MCP server provides official docs; only `svelte-core-bestpractices` kept as router.
 - **Sync everything except machine-specific config** — pi-sync's config.json is local-only.
 - **No nested .git or node_modules in sync** — extension skips these to avoid permission errors.
-
-### Known sync caveats
-
-- **Deletions are not auto-synced.** The push command copies files in but doesn't remove stale files from the repo. After deleting skills locally, run `cd ~/.pi-sync && git add -A && git commit -m "cleanup" && git push`.
+- **Deletions are auto-synced** — push now wipes target dirs before copying, so removed skills/extensions/prompts are properly deleted from the repo.
 - **Reload after pull.** Run `/reload` to pick up new extensions and skills.
