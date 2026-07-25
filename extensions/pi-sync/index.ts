@@ -158,6 +158,7 @@ async function cmdPush(_args: string, ctx: ExtensionCommandContext): Promise<voi
     const extDir = join(PI_DIR, "extensions");
     const extEntries = await collectDirEntries(extDir);
     for (const name of extEntries) {
+      if (name === '.git' || name === 'node_modules') continue;
       const src = join(extDir, name);
       const st = await stat(src);
       if (st.isFile() && name.endsWith(".ts")) {
@@ -175,6 +176,7 @@ async function cmdPush(_args: string, ctx: ExtensionCommandContext): Promise<voi
     const skillDir = join(PI_DIR, "skills");
     const skillEntries = await collectDirEntries(skillDir);
     for (const name of skillEntries) {
+      if (name === '.git' || name === 'node_modules') continue;
       const src = join(skillDir, name);
       const st = await stat(src);
       if (st.isDirectory()) {
@@ -371,6 +373,7 @@ async function copyDirRecursive(src: string, dest: string, skip?: (name: string)
     const s = join(src, entry.name);
     const d = join(dest, entry.name);
     if (entry.isDirectory()) {
+      if (entry.name === '.git' || entry.name === 'node_modules') continue;
       await copyDirRecursive(s, d, skip);
     } else if (entry.isFile() || entry.isSymbolicLink()) {
       await copyFile(s, d);
