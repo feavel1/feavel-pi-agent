@@ -11,7 +11,7 @@
     "url": "https://github.com/feavel1/feavel-pi-agent.git"
   },
   "pi": {
-    "extensions": ["./pi-extension/index.ts"]
+    "extensions": ["./extensions/pi-sync/index.ts"]
   },
   "peerDependencies": {
     "@earendil-works/pi-ai": "*",
