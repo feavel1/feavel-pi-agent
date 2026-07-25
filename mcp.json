@@ -1,0 +1,15 @@
+{
+  "imports": [
+    "claude-code"
+  ],
+  "mcpServers": {
+    "svelte": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@sveltejs/mcp"
+      ],
+      "directTools": true
+    }
+  }
+}
