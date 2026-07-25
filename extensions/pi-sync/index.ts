@@ -103,8 +103,13 @@ async function cmdSetup(args: string, ctx: ExtensionCommandContext): Promise<voi
   }
 
   const branch = await ctx.ui.input("Branch:", cfg.branch);
-  if (branch) cfg.branch = branch;
-  else { ctx.ui.notify("Canceled", "warning"); return; }
+  if (!branch) { ctx.ui.notify("Canceled", "warning"); return; }
+  // validate: branch must not be a URL (common user mistake)
+  if (branch.startsWith("http://") || branch.startsWith("https://") || branch.startsWith("git@")) {
+    ctx.ui.notify("Invalid branch name (looks like a URL). Use 'main' or your branch name.", "error");
+    return;
+  }
+  cfg.branch = branch;
 
   await saveConfig(cfg);
 
