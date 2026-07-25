@@ -1,0 +1,18 @@
+{
+  "lastChangelogVersion": "0.82.0",
+  "theme": "dark",
+  "packages": [
+    "npm:@vigolium/piolium",
+    "npm:pi-web-access",
+    "npm:pi-subagents",
+    "git:github.com/jonjonrankin/pi-caveman",
+    "npm:opencode-ponytail",
+    "npm:@spences10/pi-svelte-guardrails",
+    "npm:pi-mcp-adapter",
+    "npm:@quintinshaw/pi-dynamic-workflows",
+    "npm:@spences10/pi-skills"
+  ],
+  "defaultProvider": "deepseek",
+  "defaultModel": "deepseek-v4-flash",
+  "defaultThinkingLevel": "off"
+}
