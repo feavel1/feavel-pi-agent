@@ -1,0 +1,21 @@
+{
+  "name": "@feavel/pi-sync",
+  "version": "1.0.0",
+  "description": "Pi config sync across devices via git remote. Push/pull extensions, skills, prompts, settings, mcp.json.",
+  "keywords": ["pi-package", "pi", "sync", "dotfiles"],
+  "license": "MIT",
+  "author": "feavel",
+  "homepage": "https://github.com/feavel1/feavel-pi-agent",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/feavel1/feavel-pi-agent.git"
+  },
+  "pi": {
+    "extensions": ["./pi-extension/index.ts"]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": "*",
+    "typebox": "*"
+  }
+}

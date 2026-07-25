@@ -1,44 +1,66 @@
 # Pi Sync Dotfiles
 
-Pi configuration backup & sync across devices via git.
+Pi config backup & sync across devices via git.
 
-## What's Here
+**This repo is both:**
+- A **pi-installable package** (`@feavel/pi-sync`) — install anywhere to get the `/sync-*` commands
+- Your **sync destination** — your actual extensions, skills, prompts, settings live here
 
-| Path | Description |
-|------|-------------|
-| `extensions/` | Pi agent extensions (`.ts` files) |
-| `skills/` | Agent skills (one folder per skill) |
-| `prompts/` | Custom prompt templates (`.md`) |
-| `settings.json` | Agent settings, theme, packages list |
-| `mcp.json` | MCP server configuration |
+## Install
 
-**Note:** `extensions/pi-sync/config.json` is **not** synced — it stores machine-specific remote/branch config.
+On **any** machine with pi:
 
-## Setup
+```bash
+pi install https://github.com/feavel1/feavel-pi-agent.git
+```
 
-In pi, run:
+Then reload:
+
+```
+/reload
+```
+
+Then configure your sync target (usually this same repo):
 
 ```
 /sync-setup
 ```
 
-Enter this repo URL when prompted, then `main` for branch.
+Enter this repo URL, then `main` for branch.
 
 ## Usage
 
 | Command | Action |
 |---------|--------|
-| `/sync-push` | Push local config to remote |
-| `/sync-pull` | Pull config from remote |
+| `/sync-push` | Push local config to this repo |
+| `/sync-pull` | Pull config from this repo |
 | `/sync-status` | Show config & file sizes |
 | `/reload` | Reload pi after pull |
 
-### Via agent
+### Via agent (LLM tool)
 
-LLM tools `pi_sync({action:'push'|'pull'|'status'})` also available.
+```
+pi_sync({action:'push'|'pull'|'status'})
+```
 
-## Setup on a New Machine
+## What Gets Synced
 
-1. Install pi
-2. Run `/sync-setup` → paste this repo URL → branch `main`
-3. Run `/sync-pull` → run `/reload`
+| Path | Description |
+|------|-------------|
+| `extensions/` | Pi agent extensions (`.ts` files) |
+| `skills/` | Agent skills |
+| `prompts/` | Custom prompt templates (`.md`) |
+| `settings.json` | Agent settings, theme, packages list |
+| `mcp.json` | MCP server configuration |
+
+**Not synced:** `extensions/pi-sync/config.json` — machine-specific remote/branch config stays local.
+
+## New Machine Setup (full)
+
+```bash
+pi install https://github.com/feavel1/feavel-pi-agent.git
+/reload
+/sync-setup     # paste repo URL, use "main"
+/sync-pull      # restore all config
+/reload         # apply
+```
