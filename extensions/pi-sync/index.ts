@@ -4,7 +4,7 @@ import type {
 } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { StringEnum } from "@earendil-works/pi-ai";
-import { readFile, writeFile, mkdir, readdir, stat, copyFile } from "node:fs/promises";
+import { readFile, writeFile, mkdir, readdir, stat, copyFile, rm } from "node:fs/promises";
 import { join, relative } from "node:path";
 import { existsSync } from "node:fs";
 
@@ -153,6 +153,11 @@ async function cmdPush(_args: string, ctx: ExtensionCommandContext): Promise<voi
         execSync(`git -C "${repoDir}" remote add origin "${cfg.remote}"`, { stdio: "pipe" });
       }
     }
+
+    // --- clean stale files from repo ---
+    await wipeDir(join(repoDir, "extensions"));
+    await wipeDir(join(repoDir, "skills"));
+    await wipeDir(join(repoDir, "prompts"));
 
     // --- copy extensions (skip pi-sync's config.json — machine-specific) ---
     const extDir = join(PI_DIR, "extensions");
@@ -362,6 +367,17 @@ async function cmdStatus(_args: string, ctx: ExtensionCommandContext): Promise<v
   ];
 
   ctx.ui.notify(lines.join("\n"), "info");
+}
+
+/** Wipe all children of a directory (non-recursive for top-level, recursive per child). */
+async function wipeDir(parent: string): Promise<void> {
+  try {
+    const entries = await readdir(parent);
+    await Promise.all(entries
+      .filter(n => n !== '.git')
+      .map(n => rm(join(parent, n), { recursive: true, force: true }))
+    );
+  } catch { /* dir doesn't exist yet, that's fine */ }
 }
 
 // ── file utils ─────────────────────────────────────────────────────
